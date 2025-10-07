@@ -1,0 +1,20 @@
+uv run chainlit hello
+This is used to test if chainlit is working or not.
+
+
+uv run chainlit run src/chatbot/app.py -w
+to run specific file 
+
+
+To do changes in UI of chainlit
+We have to write css by selecting the div using inspect.
+
+Make a public folder and add the logo, svg, and favicon etc and the edit the config.toml 
+for css make a css file in the public
+
+
+
+if there is __init__.py then python considers it a package. So we can do import abd export.
+
+
+If we a calling 15 agents so we have to call dotenv everytime. To reduce this effort we use config folder.

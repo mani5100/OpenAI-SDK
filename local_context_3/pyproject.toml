@@ -1,0 +1,24 @@
+[project]
+name = "local-context-3"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Abdul Rehman", email = "m.abdulrehman.shoukat@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "chainlit>=2.8.1",
+    "dotenv>=0.9.9",
+    "openai-agents>=0.3.2",
+    "rich>=14.1.0",
+]
+
+[project.scripts]
+local-context-3 = "local_context_3:main"
+run-agent = "local_context_3.main:main"
+run-streaming-agent = "local_context_3.streaming:main"
+
+[build-system]
+requires = ["uv_build>=0.8.19,<0.9.0"]
+build-backend = "uv_build"

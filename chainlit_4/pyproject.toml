@@ -1,0 +1,22 @@
+[project]
+name = "chainlit-4"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Abdul Rehman", email = "m.abdulrehman.shoukat@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "chainlit>=2.8.2",
+    "dotenv>=0.9.9",
+    "openai-agents>=0.3.3",
+    "rich>=14.1.0",
+]
+
+[project.scripts]
+chainlit-4 = "chainlit_4:main"
+
+[build-system]
+requires = ["uv_build>=0.8.19,<0.9.0"]
+build-backend = "uv_build"
