@@ -85,17 +85,17 @@ Date: November 6, 2025
   - [x] 2.10 Test migration by running `alembic upgrade head` and verify tables are created (Task ID: KAN-29)
   - [x] 2.11 Create database service layer with CRUD operations for threads and messages (Task ID: KAN-30)
 
-- [ ] 3.0 Build OpenAI Agent Service Integration
-  - [ ] 3.1 Create `src/postgresdb_8/services/openai_service.py` with OpenAI client initialization
-  - [ ] 3.2 Implement assistant creation/retrieval using OpenAI Agents SDK
-  - [ ] 3.3 Implement thread creation method that creates OpenAI thread and stores metadata in PostgreSQL
-  - [ ] 3.4 Implement method to send message to existing thread using OpenAI's thread management
-  - [ ] 3.5 Implement streaming response handler using OpenAI's streaming API
-  - [ ] 3.6 Implement non-streaming response handler for simple message-response flow
-  - [ ] 3.7 Add token usage tracking and extraction from OpenAI API responses
-  - [ ] 3.8 Implement error handling for OpenAI API errors (rate limits, API unavailability, etc.)
-  - [ ] 3.9 Create method to retrieve thread history from OpenAI
-  - [ ] 3.10 Test OpenAI integration with sample requests and verify responses
+- [x] 3.0 Build OpenAI Agent Service Integration (Task ID: KAN-7)
+  - [x] 3.1 Create `src/postgresdb_8/services/openai_service.py` with OpenAI client initialization (Task ID: KAN-31)
+  - [x] 3.2 Implement assistant creation/retrieval using OpenAI Agents SDK (Task ID: KAN-32)
+  - [x] 3.3 Implement thread creation with PostgreSQL integration via ChatService (Task ID: KAN-33)
+  - [x] 3.4 Implement method to send message to existing thread using OpenAI's thread management (Task ID: KAN-34)
+  - [x] 3.5 Implement streaming response handler using OpenAI's streaming API (Task ID: KAN-35)
+  - [x] 3.6 Implement non-streaming response handler for simple message-response flow (Task ID: KAN-36)
+  - [x] 3.7 Add token usage tracking and extraction from OpenAI API responses (Task ID: KAN-37)
+  - [x] 3.8 Implement error handling for OpenAI API errors (rate limits, API unavailability, etc.) (Task ID: KAN-38)
+  - [x] 3.9 Create method to retrieve thread history from OpenAI and PostgreSQL (Task ID: KAN-39)
+  - [x] 3.10 Test OpenAI integration with sample requests and verify responses (Task ID: KAN-40)
 
 - [ ] 4.0 Create Chat API Endpoints with Streaming Support
   - [ ] 4.1 Create Pydantic schemas for chat requests and responses in `src/postgresdb_8/schemas/chat.py`
