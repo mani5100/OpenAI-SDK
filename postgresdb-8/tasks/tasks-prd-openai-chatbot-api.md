@@ -97,19 +97,19 @@ Date: November 6, 2025
   - [x] 3.9 Create method to retrieve thread history from OpenAI and PostgreSQL (Task ID: KAN-39)
   - [x] 3.10 Test OpenAI integration with sample requests and verify responses (Task ID: KAN-40)
 
-- [ ] 4.0 Create Chat API Endpoints with Streaming Support
-  - [ ] 4.1 Create Pydantic schemas for chat requests and responses in `src/postgresdb_8/schemas/chat.py`
-  - [ ] 4.2 Create dependency injection for database session in `src/postgresdb_8/api/dependencies.py`
-  - [ ] 4.3 Create dependency injection for OpenAI service instance
-  - [ ] 4.4 Implement POST `/chat/message` endpoint for non-streaming chat
-  - [ ] 4.5 Implement POST `/chat/message` endpoint with streaming support using Server-Sent Events (SSE)
-  - [ ] 4.6 Add logic to auto-create new thread if `thread_id` is not provided
-  - [ ] 4.7 Implement GET `/chat/threads/{thread_id}` endpoint to retrieve conversation history
-  - [ ] 4.8 Implement GET `/chat/threads` endpoint with pagination support
-  - [ ] 4.9 Implement DELETE `/chat/threads/{thread_id}` endpoint to delete thread and messages
-  - [ ] 4.10 Store all messages and token usage in PostgreSQL after each chat interaction
-  - [ ] 4.11 Add request/response validation using Pydantic models
-  - [ ] 4.12 Test all endpoints with various scenarios (new thread, existing thread, streaming, non-streaming)
+- [x] 4.0 Create Chat API Endpoints with Streaming Support
+  - [x] 4.1 Create Pydantic schemas for chat requests and responses in `src/postgresdb_8/schemas/chat.py`
+  - [x] 4.2 Create dependency injection for database session in `src/postgresdb_8/api/dependencies.py`
+  - [x] 4.3 Create dependency injection for OpenAI service instance
+  - [x] 4.4 Implement POST `/chat/message` endpoint for non-streaming chat
+  - [x] 4.5 Implement POST `/chat/message` endpoint with streaming support using Server-Sent Events (SSE)
+  - [x] 4.6 Add logic to auto-create new thread if `thread_id` is not provided
+  - [x] 4.7 Implement GET `/chat/threads/{thread_id}` endpoint to retrieve conversation history
+  - [x] 4.8 Implement GET `/chat/threads` endpoint with pagination support
+  - [x] 4.9 Implement DELETE `/chat/threads/{thread_id}` endpoint to delete thread and messages
+  - [x] 4.10 Store all messages and token usage in PostgreSQL after each chat interaction
+  - [x] 4.11 Add request/response validation using Pydantic models
+  - [x] 4.12 Test all endpoints with various scenarios (new thread, existing thread, streaming, non-streaming)
 
 - [ ] 5.0 Implement Monitoring, Error Handling, and Documentation
   - [ ] 5.1 Create custom exception classes in `src/postgresdb_8/utils/errors.py` (ThreadNotFound, OpenAIError, etc.)
