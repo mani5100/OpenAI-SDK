@@ -1,0 +1,362 @@
+/*
+  Elegant Chainlit theme — designer polish
+  - Dark-first theme with light fallback
+  - Micro-animations, subtle depth, message tails, pill buttons
+  - Target common Chainlit selectors; tweak with DevTools if your version differs
+*/
+
+:root{
+  /* Colors */
+  --accent: #7b61ff;            /* primary accent */
+  --accent-2: #5f4ce6;         /* secondary accent for depth */
+  --bg: #071124;               /* page background */
+  --surface: #0d1622;          /* chat surface */
+  --muted: #9fb0c8;
+  --text: #e6eef8;
+  --muted-2: #8ea3b6;
+  --glass: rgba(255,255,255,0.02);
+
+  /* Message colors */
+  --user-bg: linear-gradient(180deg, rgba(123,97,255,0.14), rgba(95,76,230,0.06));
+  --assistant-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+
+  /* Code/backgrounds */
+  --code-bg: rgba(7,12,20,0.6);
+
+  /* Layout */
+  --radius: 14px;
+  --radius-sm: 8px;
+  --max-width: 980px;
+  --container-pad: 22px;
+  --transition-fast: 180ms;
+  --transition: 300ms cubic-bezier(.2,.9,.2,1);
+}
+
+*{ box-sizing: border-box; }
+html,body{
+  height:100%;
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(123,97,255,0.04), transparent 6%),
+              linear-gradient(180deg, var(--bg) 0%, #071827 100%);
+  color: var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* App container */
+.cl-root, .app, #app { display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+.cl-container, .cl-chat-container, .app-container {
+  width:100%; max-width:var(--max-width); padding:var(--container-pad);
+}
+
+/* Header */
+.cl-header, .app-header {
+  width:100%; max-width:var(--max-width); display:flex; align-items:center; justify-content:space-between;
+  padding:12px var(--container-pad); margin:6px 0 18px; pointer-events:auto;
+}
+.cl-header .logo, .cl-header .cl-logo { display:flex; align-items:center; gap:12px; }
+.cl-logo img { height:28px; filter: drop-shadow(0 6px 14px rgba(11,18,29,0.45)); }
+.cl-header .action-btn { background: linear-gradient(180deg,var(--accent),var(--accent-2)); color:white; padding:10px 14px; border-radius:12px; border:none; cursor:pointer; box-shadow: 0 6px 22px rgba(91,63,255,0.12); transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.cl-header .action-btn:hover{ transform: translateY(-3px); box-shadow:0 10px 30px rgba(91,63,255,0.16); }
+
+/* Chat area */
+.cl-chat { width:100%; max-width:var(--max-width); display:flex; flex-direction:column; gap:12px; }
+.cl-chat-list { display:flex; flex-direction:column; gap:10px; }
+
+/* Sticky chat area so messages scroll under input */
+.cl-chat-wrapper { position:relative; padding-bottom:160px; }
+.cl-chat-list { padding-bottom:18px }
+
+/* Message card base */
+.cl-chat__message, .cl-message, .message, .chat-message {
+  position:relative; display:block; max-width:78%; padding:14px 16px; margin:6px 0; color:var(--text);
+  border-radius:var(--radius); line-height:1.5; box-shadow: 0 4px 18px rgba(3,7,12,0.45);
+  background: var(--assistant-bg);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition);
+}
+.cl-chat__message:hover, .message:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(3,7,12,0.55); }
+
+/* Assistant (left) */
+.cl-chat__message--assistant, .message.assistant, .chat-message.assistant {
+  align-self:flex-start; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.007));
+  border: 1px solid rgba(255,255,255,0.02);
+}
+.cl-chat__message--assistant::before{ /* subtle tail */
+  content: ""; position:absolute; left:-8px; top:12px; width:14px; height:14px; transform: rotate(45deg);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.007)); border-left:1px solid rgba(255,255,255,0.02); border-top:1px solid rgba(255,255,255,0.02);
+  border-bottom-left-radius:2px;
+}
+
+/* User (right) */
+.cl-chat__message--user, .message.user, .chat-message.user {
+  align-self:flex-end; background: var(--user-bg); color:var(--text); border: 1px solid rgba(123,97,255,0.12);
+}
+.cl-chat__message--user::after{
+  content: ""; position:absolute; right:-8px; top:12px; width:14px; height:14px; transform: rotate(45deg);
+  background: var(--user-bg); border-right:1px solid rgba(95,76,230,0.08); border-bottom:1px solid rgba(95,76,230,0.06);
+}
+
+/* Message micro details: chip badges for role/time and message border highlight */
+.cl-chat__meta-chip { display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; background: rgba(255,255,255,0.02); color:var(--muted-2); font-size:0.82rem; box-shadow: inset 0 -1px 0 rgba(0,0,0,0.14); }
+.cl-chat__message.highlight { box-shadow: 0 18px 44px rgba(6,8,16,0.6); border: 1px solid rgba(123,97,255,0.14); }
+
+/* Typing indicator */
+.typing { display:inline-flex; gap:6px; align-items:center; padding:10px 14px; border-radius:999px; background: rgba(255,255,255,0.02); }
+.typing .dot { width:8px; height:8px; border-radius:50%; background: rgba(255,255,255,0.18); opacity:0.9; transform: translateY(0); animation: typing 1200ms infinite; }
+.typing .dot:nth-child(2){ animation-delay: 200ms }
+.typing .dot:nth-child(3){ animation-delay: 360ms }
+@keyframes typing{ 0%{ transform: translateY(0); opacity:0.35 } 50%{ transform: translateY(-6px); opacity:1 } 100%{ transform: translateY(0); opacity:0.35 } }
+
+/* Message content: nice link and emphasis styles */
+.cl-chat__message a { color: var(--accent); text-decoration: underline; text-underline-offset:4px }
+.cl-chat__message b, .cl-chat__message strong { color: #fff }
+
+/* Glass blur backdrop for input area */
+.cl-input-wrap { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)); border-radius:18px; padding:10px; backdrop-filter: blur(6px); box-shadow: 0 14px 36px rgba(3,7,12,0.6); }
+
+/* Meta info (author/time) */
+.cl-chat__message .meta, .message .meta { display:flex; gap:8px; align-items:center; font-size:0.82rem; color:var(--muted-2); margin-top:8px; }
+.cl-chat__message .meta .time { opacity:0.85; font-variant-numeric: tabular-nums }
+
+/* Avatars */
+.cl-avatar, .avatar { width:40px; height:40px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:600; color:var(--text); background:linear-gradient(135deg,#203243,#122028); box-shadow: 0 6px 18px rgba(3,7,12,0.6); }
+.avatar.small { width:28px; height:28px; font-size:0.82rem }
+.avatar.ring { padding:6px; background:linear-gradient(180deg, rgba(123,97,255,0.12), rgba(95,76,230,0.06)); border-radius:50%; }
+
+/* Input area (centered like screenshot) */
+.cl-input-row, .input-area, .cl-input-container { width:100%; display:flex; align-items:flex-end; justify-content:center; margin-top:26px; }
+.cl-input-wrap { width:78%; display:flex; gap:12px; align-items:flex-end; }
+.cl-textarea, textarea, .cl-input { width:100%; min-height:64px; max-height:220px; resize:vertical; padding:18px 22px; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(0,0,0,0.16); color:var(--text); font-size:1rem; box-shadow: inset 0 -1px 0 rgba(0,0,0,0.25); transition: box-shadow var(--transition-fast), transform var(--transition-fast); }
+.cl-textarea:focus, textarea:focus { outline:none; box-shadow: 0 8px 30px rgba(91,63,255,0.08), inset 0 1px 0 rgba(255,255,255,0.02); transform: translateY(-1px); }
+
+/* Attachment and send buttons */
+.attachment-btn, .file-btn { width:44px; height:44px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(123,97,255,0.12), rgba(95,76,230,0.06)); border:1px solid rgba(255,255,255,0.03); color:var(--text); cursor:pointer; box-shadow: 0 6px 18px rgba(10,15,25,0.5); }
+.attachment-btn:hover { transform: translateY(-3px); }
+.send-btn { width:48px; height:48px; border-radius:50%; background: linear-gradient(180deg,var(--accent),var(--accent-2)); border:none; color:white; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 10px 30px rgba(91,63,255,0.14); transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.send-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(91,63,255,0.22); }
+
+/* Small helper icons near input (left/right) */
+.input-left, .input-right { display:flex; align-items:center; gap:8px }
+
+/* Code blocks with copy button */
+.code-toolbar { position:relative; }
+.code-copy-btn { position:absolute; right:10px; top:10px; background: rgba(0,0,0,0.25); color:#fff; border-radius:8px; border:none; padding:6px 8px; font-size:0.9rem; cursor:pointer; opacity:0.85; transition: opacity var(--transition-fast), transform var(--transition-fast); }
+.code-copy-btn:hover { opacity:1; transform: translateY(-2px); }
+
+/* Empty/welcome screen */
+.cl-empty, .welcome-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:48px 12px; color:var(--muted); }
+.welcome-screen .logo { filter: drop-shadow(0 10px 24px rgba(7,12,20,0.6)); }
+.welcome-screen h1 { margin:0; font-size:1.2rem; color:var(--text); }
+
+/* Footer */
+.cl-footer, .app-footer { width:100%; max-width:var(--max-width); padding:8px var(--container-pad); color:var(--muted); display:flex; justify-content:center; font-size:0.92rem }
+
+/* Scrollbar refinement */
+::-webkit-scrollbar{ width:12px; height:12px }
+::-webkit-scrollbar-track{ background: transparent }
+::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(123,97,255,0.16), rgba(95,76,230,0.08)); border-radius:999px; border:3px solid transparent; background-clip: content-box }
+
+/* Buttons globally */
+.cl-btn, button, a.button { background: transparent; color:var(--accent); border: 1px solid rgba(123,97,255,0.12); padding:8px 12px; border-radius:10px; cursor:pointer; transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.cl-btn.primary, button.primary { background: linear-gradient(180deg,var(--accent),var(--accent-2)); color: #fff; border: none; box-shadow: 0 10px 30px rgba(91,63,255,0.12) }
+.cl-btn:hover, button:hover { transform: translateY(-3px) }
+
+/* Make buttons and icon svgs visible by default (fix hover-only visibility) */
+.cl-btn, button, a.button, .attachment-btn, .file-btn, .send-btn, .code-copy-btn, .cl-header .icon-button, .cl-header button, .action-btn {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure SVG icons inherit color and are fully opaque by default */
+button svg, .cl-btn svg, .attachment-btn svg, .file-btn svg, .cl-header button svg, .action-btn svg, .code-copy-btn svg {
+  fill: currentColor !important;
+  stroke: none !important;
+  opacity: 1 !important;
+  width: 18px; height: 18px;
+}
+
+/* Default SVG/icon color (dark theme) */
+button svg, .cl-btn svg { color: var(--text); }
+
+/* Light theme: give icons explicit, higher-contrast fills */
+body.theme-light button svg, body.theme-light .attachment-btn svg, body.theme-light .file-btn svg, body.theme-light .cl-header button svg, body.theme-light .action-btn svg {
+  fill: var(--accent-2) !important;
+  color: var(--accent-2) !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 6px 14px rgba(56,103,214,0.08));
+}
+
+
+/* Responsive tweaks */
+@media (max-width:920px){ .cl-textarea, .cl-input-wrap { width:86% } }
+@media (max-width:720px){ :root { --max-width:100%; --container-pad:12px } .cl-input-wrap { width:92% } .cl-chat__message, .message { max-width:100% } }
+
+/* Light theme: nicer override when user prefers light or when body has class 'theme-light' */
+@media (prefers-color-scheme: light){
+  body{ background: #f7fafc; color: #0b1220 }
+  :root{
+    --accent: #3867d6;
+    --accent-2: #2563eb;
+    --accent-3: #ef4444;
+    --bg: #f7fafc;
+    --bg-2: #eef3fb;
+    --surface: #ffffff;
+    --text: #0b1220;
+    --muted: #6b7280;
+    --muted-2: #4b5563;
+    --code-bg: #f3f4f6;
+    --assistant-bg: linear-gradient(180deg,#ffffff,#fbfbfd);
+    --user-bg: linear-gradient(180deg,#e8f0ff,#dfeaff);
+    --user-bg-solid: rgba(59,130,246,0.12);
+  }
+  /* lighten shadows for the light theme */
+  .cl-chat__message, .message { box-shadow: 0 8px 20px rgba(16,24,40,0.06); border-color: rgba(9,14,20,0.04) }
+  .cl-chat__message--assistant::before{ border-color: rgba(0,0,0,0.06) }
+  .cl-avatar, .avatar { box-shadow: 0 6px 18px rgba(16,24,40,0.06) }
+  .cl-input-wrap { background: rgba(255,255,255,0.98); box-shadow: 0 8px 28px rgba(16,24,40,0.06); }
+  .cl-textarea, textarea, .cl-input { background: linear-gradient(180deg,#fff,#fbfbff); border:1px solid rgba(15,23,40,0.06); color:var(--text) }
+  ::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(56,103,214,0.16), rgba(37,99,235,0.08)); }
+}
+
+/* Class-based light theme: use when the UI toggles theme by adding 'theme-light' to <body> */
+body.theme-light, .theme-light {
+  --accent: #3867d6;
+  --accent-2: #2563eb;
+  --accent-3: #ef4444;
+  --bg: #f7fafc;
+  --bg-2: #eef3fb;
+  --surface: #ffffff;
+  --text: #0b1220;
+  --muted: #6b7280;
+  --muted-2: #4b5563;
+  --code-bg: #f3f4f6;
+  --assistant-bg: linear-gradient(180deg,#ffffff,#fbfbfd);
+  --user-bg: linear-gradient(180deg,#e8f0ff,#dfeaff);
+  --user-bg-solid: rgba(59,130,246,0.12);
+}
+
+/* Fine-tune component colors under body.theme-light */
+body.theme-light .cl-chat__message, body.theme-light .message {
+  box-shadow: 0 8px 20px rgba(16,24,40,0.06);
+  border-color: rgba(9,14,20,0.04);
+  color: var(--text);
+}
+body.theme-light .cl-chat__message--user::after{ background: var(--user-bg); border-right:1px solid rgba(37,99,235,0.08) }
+body.theme-light .cl-chat__message--assistant::before{ background: var(--assistant-bg); border-left:1px solid rgba(0,0,0,0.04) }
+body.theme-light .cl-header .action-btn{ box-shadow: 0 8px 22px rgba(56,103,214,0.08) }
+body.theme-light .send-btn{ box-shadow:0 8px 28px rgba(37,99,235,0.12) }
+body.theme-light .cl-avatar, body.theme-light .avatar{ background:linear-gradient(135deg,#ecf2ff,#dfeeff); color:var(--text) }
+
+/* Stronger light-mode treatment for icons and controls */
+body.theme-light .cl-header, body.theme-light .app-header{
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35));
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 8px var(--container-pad);
+}
+
+/* Make header icons more prominent */
+body.theme-light .cl-header button, body.theme-light .cl-header .icon-button, body.theme-light .action-btn{
+  height:46px; min-width:46px; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:12px; border:1px solid rgba(15,23,40,0.06); background: linear-gradient(180deg,#fff,#f6f9ff);
+}
+body.theme-light .cl-header button svg, body.theme-light .cl-header .icon-button svg, body.theme-light .action-btn svg{
+  filter: drop-shadow(0 6px 14px rgba(56,103,214,0.08)); width:20px; height:20px; color:var(--accent-2);
+}
+
+/* Attachment and send icons — stronger contrast */
+body.theme-light .attachment-btn, body.theme-light .file-btn{ background:#fff; border:1px solid rgba(15,23,40,0.06); box-shadow:0 6px 18px rgba(16,24,40,0.06); }
+body.theme-light .attachment-btn svg, body.theme-light .file-btn svg{ fill:var(--accent-2); filter: drop-shadow(0 6px 10px rgba(37,99,235,0.06)); }
+
+/* Make send button brighter and more tactile in light mode */
+body.theme-light .send-btn{ background: linear-gradient(180deg,#ff79a8,#ff6b9f); box-shadow:0 18px 46px rgba(255,107,159,0.12); border:none }
+body.theme-light .send-btn svg{ filter: drop-shadow(0 6px 18px rgba(255,107,159,0.10)); }
+
+/* Input surface: paper card with soft border */
+body.theme-light .cl-input-wrap{ background: linear-gradient(180deg,#ffffff,#fbfbff); border:1px solid rgba(15,23,40,0.04); box-shadow: 0 12px 32px rgba(16,24,40,0.06); }
+body.theme-light .cl-textarea, body.theme-light textarea, body.theme-light .cl-input{ background: transparent; color:var(--text); }
+
+/* Code copy button for light mode */
+body.theme-light .code-copy-btn{ background: #f3f6fb; color:var(--accent-2); border:1px solid rgba(15,23,40,0.04); }
+
+/* Make footer controls more visible */
+body.theme-light .cl-footer, body.theme-light .app-footer{ color:var(--muted-2); background: transparent }
+
+/* Slight paper texture overlay for light mode to make it feel "light" */
+body.theme-light::before{ content:""; position:fixed; inset:0; pointer-events:none; background-image: linear-gradient(0deg, rgba(0,0,0,0.01) 1px, transparent 1px); opacity:0.02; }
+
+/* Ensure icons and small buttons have clear hover states */
+body.theme-light .cl-btn:hover, body.theme-light button:hover{ transform: translateY(-2px); box-shadow:0 8px 22px rgba(16,24,40,0.06) }
+
+
+
+/* Small utilities */
+.muted { color: var(--muted); font-size: 0.95em }
+.center { display:flex; align-items:center; justify-content:center }
+
+/* subtle entrance animation */
+.cl-chat__message, .message { animation: fadeUp 360ms ease both }
+@keyframes fadeUp{ from { opacity:0; transform: translateY(6px) } to { opacity:1; transform: translateY(0) } }
+
+/* Focus rings and accessibility */
+:focus { outline: none }
+.cl-textarea:focus-visible, .cl-input:focus-visible, button:focus-visible { box-shadow: 0 0 0 4px rgba(123,97,255,0.09), 0 8px 30px rgba(3,7,12,0.4); border-color: rgba(123,97,255,0.16) }
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .cl-chat__message, .message, .cl-textarea, .send-btn, .cl-btn { transition: none !important; animation: none !important }
+}
+
+/* Sticky input/footer */
+.cl-footer, .app-footer { position:fixed; left:0; right:0; bottom:20px; display:flex; justify-content:center; pointer-events:none }
+.cl-footer .footer-inner { pointer-events:auto; width:100%; max-width:var(--max-width); padding:8px var(--container-pad); }
+
+
+/* End of elegant style */
+pre, code, .cl-code, .code-block { background: var(--code-bg); border-radius:10px; color:#dbeafe; font-family: "Fira Code", "Source Code Pro", monospace; position:relative; padding:14px; overflow:auto; }
+.code-toolbar { position:relative; }
+.code-copy-btn { position:absolute; right:10px; top:10px; background: rgba(0,0,0,0.25); color:#fff; border-radius:8px; border:none; padding:6px 8px; font-size:0.9rem; cursor:pointer; opacity:0.85; transition: opacity var(--transition-fast), transform var(--transition-fast); }
+.code-copy-btn:hover { opacity:1; transform: translateY(-2px); }
+
+/* Empty/welcome screen */
+.cl-empty, .welcome-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:48px 12px; color:var(--muted); }
+.welcome-screen .logo { filter: drop-shadow(0 10px 24px rgba(7,12,20,0.6)); }
+.welcome-screen h1 { margin:0; font-size:1.2rem; color:var(--text); }
+
+/* Footer */
+.cl-footer, .app-footer { width:100%; max-width:var(--max-width); padding:8px var(--container-pad); color:var(--muted); display:flex; justify-content:center; font-size:0.92rem }
+
+/* Scrollbar refinement */
+::-webkit-scrollbar{ width:12px; height:12px }
+::-webkit-scrollbar-track{ background: transparent }
+::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(123,97,255,0.16), rgba(95,76,230,0.08)); border-radius:999px; border:3px solid transparent; background-clip: content-box }
+
+/* Buttons globally */
+.cl-btn, button, a.button { background: transparent; color:var(--accent); border: 1px solid rgba(123,97,255,0.12); padding:8px 12px; border-radius:10px; cursor:pointer; transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.cl-btn.primary, button.primary { background: linear-gradient(180deg,var(--accent),var(--accent-2)); color: #fff; border: none; box-shadow: 0 10px 30px rgba(91,63,255,0.12) }
+.cl-btn:hover, button:hover { transform: translateY(-3px) }
+
+/* Responsive tweaks */
+@media (max-width:920px){ .cl-textarea, .cl-input-wrap { width:86% } }
+@media (max-width:720px){ :root { --max-width:100%; --container-pad:12px } .cl-input-wrap { width:92% } .cl-chat__message, .message { max-width:100% } }
+
+/* Light theme fallback */
+@media (prefers-color-scheme: light){
+  :root{
+    --accent: #3867d6; --accent-2:#2563eb; --bg:#f7fafc; --surface:#ffffff; --text:#0b1220; --muted:#5b6b7a; --code-bg:#f3f4f6;
+  }
+  body{ background: var(--bg); color:var(--text) }
+  .cl-chat__message--assistant::before{ border-color: rgba(0,0,0,0.06) }
+}
+
+/* Small utilities */
+.muted { color: var(--muted); font-size: 0.95em }
+.center { display:flex; align-items:center; justify-content:center }
+
+/* subtle entrance animation */
+.cl-chat__message, .message { animation: fadeUp 360ms ease both }
+@keyframes fadeUp{ from { opacity:0; transform: translateY(6px) } to { opacity:1; transform: translateY(0) } }
+
+/* End of elegant style */
