@@ -14,6 +14,8 @@ from ...schemas.chat import (
     ThreadListResponse,
 )
 from ...services import ChatService
+from ...services.openai_service import OpenAIService
+from ...config import settings
 from ..dependencies import get_db_session
 
 
@@ -68,8 +70,9 @@ async def send_message(
         },
     )
     
-    # Create chat service with db session
-    chat_service = ChatService(db)
+    # Create services
+    openai_service = OpenAIService(settings)
+    chat_service = ChatService(openai_service, db)
     
     try:
         # Handle streaming responses
@@ -81,7 +84,8 @@ async def send_message(
         thread_id = request.thread_id
         if thread_id is None:
             logger.info("Auto-creating new thread")
-            thread_id = await chat_service.create_thread()
+            thread = await chat_service.create_thread()
+            thread_id = str(thread.id)
             logger.info(f"New thread created", extra={"extra_fields": {"thread_id": thread_id}})
         
         # Send message and get response (non-streaming)
@@ -89,10 +93,14 @@ async def send_message(
             "Sending message to OpenAI",
             extra={"extra_fields": {"thread_id": thread_id}}
         )
-        user_msg, assistant_msg = await chat_service.send_message_non_streaming(
+        result = await chat_service.send_message_non_streaming(
             thread_id=thread_id,
-            message=request.message
+            user_message=request.message
         )
+        
+        # Get messages from database for response
+        user_msg = await chat_service.db.get_message_by_id(result['user_message_id'])
+        assistant_msg = await chat_service.db.get_message_by_id(result['assistant_message_id'])
         
         # Convert database models to Pydantic responses
         user_response = MessageResponse.model_validate(user_msg)
@@ -103,9 +111,9 @@ async def send_message(
             extra={
                 "extra_fields": {
                     "thread_id": thread_id,
-                    "total_tokens": assistant_msg.total_tokens,
-                    "prompt_tokens": assistant_msg.prompt_tokens,
-                    "completion_tokens": assistant_msg.completion_tokens,
+                    "total_tokens": result['usage']['total_tokens'],
+                    "prompt_tokens": result['usage']['prompt_tokens'],
+                    "completion_tokens": result['usage']['completion_tokens'],
                 }
             },
         )
@@ -114,7 +122,7 @@ async def send_message(
             thread_id=thread_id,
             user_message=user_response,
             assistant_message=assistant_response,
-            total_tokens=assistant_msg.total_tokens
+            total_tokens=result['usage']['total_tokens']
         )
         
     except Exception as e:
@@ -160,7 +168,8 @@ async def send_message_streaming(
     # Auto-create thread if not provided
     thread_id = request.thread_id
     if thread_id is None:
-        thread_id = await chat_service.create_thread()
+        thread = await chat_service.create_thread()
+        thread_id = str(thread.id)
         logger.info(
             "Thread auto-created for streaming",
             extra={"extra_fields": {"thread_id": thread_id}}
@@ -254,7 +263,8 @@ async def get_thread(
         extra={"extra_fields": {"thread_id": thread_id}}
     )
     
-    chat_service = ChatService(db)
+    openai_service = OpenAIService(settings)
+    chat_service = ChatService(openai_service, db)
     
     try:
         thread = await chat_service.get_thread(thread_id)
@@ -344,7 +354,8 @@ async def list_threads(
         extra={"extra_fields": {"page": page, "page_size": page_size}}
     )
     
-    chat_service = ChatService(db)
+    openai_service = OpenAIService(settings)
+    chat_service = ChatService(openai_service, db)
     
     try:
         # Get paginated threads
@@ -431,7 +442,8 @@ async def delete_thread(
         extra={"extra_fields": {"thread_id": thread_id}}
     )
     
-    chat_service = ChatService(db)
+    openai_service = OpenAIService(settings)
+    chat_service = ChatService(openai_service, db)
     
     try:
         # Delete thread from both OpenAI and database

@@ -33,8 +33,8 @@ class ChatRequest(BaseModel):
 class MessageResponse(BaseModel):
     """Response model for a single message."""
 
-    id: int = Field(..., description="Message database ID")
-    thread_id: str = Field(..., description="OpenAI thread ID")
+    id: str = Field(..., description="Message database ID (UUID)")
+    thread_id: str = Field(..., description="Thread database ID (UUID)")
     openai_message_id: Optional[str] = Field(None, description="OpenAI message ID")
     role: str = Field(..., description="Message role (user or assistant)")
     content: str = Field(..., description="Message content")
@@ -48,7 +48,7 @@ class MessageResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
+                    "id": "2fa7dd66-338d-4f7c-b749-fa6cc358e5a0",
                     "thread_id": "thread_abc123",
                     "openai_message_id": "msg_xyz789",
                     "role": "assistant",
