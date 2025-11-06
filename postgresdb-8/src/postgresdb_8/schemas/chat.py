@@ -106,7 +106,7 @@ class ChatResponse(BaseModel):
 class ThreadResponse(BaseModel):
     """Response model for thread details."""
 
-    id: int = Field(..., description="Thread database ID")
+    id: str = Field(..., description="Thread database ID (UUID)")
     thread_id: str = Field(..., description="OpenAI thread ID")
     message_count: int = Field(0, description="Number of messages in thread")
     total_tokens: int = Field(0, description="Total tokens used across all messages")
@@ -119,7 +119,7 @@ class ThreadResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "id": 1,
+                    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
                     "thread_id": "thread_abc123",
                     "message_count": 4,
                     "total_tokens": 156,

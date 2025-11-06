@@ -61,10 +61,14 @@ class DatabaseService:
         Returns:
             ConversationThread if found, None otherwise
         """
-        result = await self.session.execute(
-            select(ConversationThread).where(ConversationThread.id == thread_id)
-        )
-        return result.scalar_one_or_none()
+        try:
+            result = await self.session.execute(
+                select(ConversationThread).where(ConversationThread.id == thread_id)
+            )
+            return result.scalar_one_or_none()
+        except Exception:
+            # Invalid UUID format or other database error
+            return None
     
     async def get_thread_by_openai_id(
         self, openai_thread_id: str

@@ -94,7 +94,30 @@ class Settings(BaseSettings):
     )
     
     APP_DESCRIPTION: str = Field(
-        default="A FastAPI-based chatbot service using OpenAI Agents SDK with conversation history persistence",
+        default="""
+## FastAPI Chatbot with OpenAI Agents SDK
+
+A production-ready chatbot API service that integrates OpenAI's Assistants API with PostgreSQL for conversation history persistence.
+
+### Features
+- **OpenAI Integration**: Powered by OpenAI's Assistants API for intelligent conversations
+- **Streaming Support**: Real-time responses using Server-Sent Events (SSE)
+- **Conversation Management**: Persistent thread and message storage in PostgreSQL
+- **Token Tracking**: Monitor and track OpenAI API token usage
+- **Health Monitoring**: Comprehensive health checks for all dependencies
+- **Production Ready**: Structured logging, error handling, and request tracking
+
+### API Endpoints
+- `POST /chat/message` - Send messages to the chatbot (with streaming support)
+- `GET /chat/threads/{thread_id}` - Retrieve conversation history
+- `GET /chat/threads` - List all conversations with pagination
+- `DELETE /chat/threads/{thread_id}` - Delete a conversation thread
+- `GET /health` - Health status of API and dependencies
+
+### Documentation
+- Interactive API docs: [/docs](/docs)
+- Alternative docs: [/redoc](/redoc)
+        """,
         description="Application description"
     )
     
@@ -102,6 +125,10 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = Field(
         default="INFO",
         description="Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)"
+    )
+    LOG_JSON: bool = Field(
+        default=True,
+        description="Enable JSON formatted logs for structured logging"
     )
     
     @field_validator("OPENAI_API_KEY")

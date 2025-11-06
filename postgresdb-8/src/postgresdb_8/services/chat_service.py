@@ -89,6 +89,17 @@ class ChatService:
         """
         return await self.db.get_thread_by_openai_id(openai_thread_id)
     
+    async def get_thread_messages(self, thread_id: str) -> list:
+        """Get all messages for a thread.
+        
+        Args:
+            thread_id: Thread database ID
+            
+        Returns:
+            List of Message objects
+        """
+        return await self.db.get_messages_by_thread(thread_id)
+    
     async def send_message_non_streaming(
         self,
         thread_id: str,
