@@ -23,6 +23,16 @@ from postgresdb_8.config import settings
 from postgresdb_8.models.base import Base
 
 
+def safe_print(text: str):
+    """Print text with fallback for Unicode errors."""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Fallback: remove emojis and special characters
+        text = text.replace("✅", "[PASS]").replace("❌", "[FAIL]")
+        print(text)
+
+
 class ErrorScenarioTester:
     """Test various error scenarios for the chatbot API."""
     
@@ -42,9 +52,9 @@ class ErrorScenarioTester:
     def log_test(self, test_name: str, passed: bool, details: str = ""):
         """Log test result."""
         status = "✅ PASS" if passed else "❌ FAIL"
-        print(f"{status}: {test_name}")
+        safe_print(f"{status}: {test_name}")
         if details:
-            print(f"   Details: {details}")
+            safe_print(f"   Details: {details}")
         
         if passed:
             self.test_results["passed"] += 1
@@ -69,7 +79,7 @@ class ErrorScenarioTester:
         
         if passed:
             data = response.json()
-            print(f"   Error response: {data.get('detail', 'No detail')}")
+            safe_print(f"   Error response: {data.get('detail', 'No detail')}")
     
     async def test_invalid_missing_message_field(self):
         """Test request without message field (validation error)."""
@@ -121,9 +131,17 @@ class ErrorScenarioTester:
             f"Expected 404, got {response.status_code}"
         )
         
+        # Print error detail for debugging
+        if not passed:
+            try:
+                data = response.json()
+                safe_print(f"   Error detail: {data}")
+            except:
+                safe_print(f"   Response text: {response.text}")
+        
         if passed:
             data = response.json()
-            print(f"   Error message: {data.get('detail', 'No detail')}")
+            safe_print(f"   Error message: {data.get('detail', 'No detail')}")
     
     async def test_delete_nonexistent_thread(self):
         """Test deleting non-existent thread (404 error)."""
@@ -139,6 +157,14 @@ class ErrorScenarioTester:
             passed,
             f"Expected 404, got {response.status_code}"
         )
+        
+        # Print error detail for debugging
+        if not passed:
+            try:
+                data = response.json()
+                safe_print(f"   Error detail: {data}")
+            except:
+                safe_print(f"   Response text: {response.text}")
     
     async def test_invalid_pagination_params(self):
         """Test list threads with invalid pagination parameters."""
@@ -180,9 +206,9 @@ class ErrorScenarioTester:
         
         if response.status_code == 200:
             data = response.json()
-            print(f"   Status: {data.get('status')}")
-            print(f"   Database: {data.get('database')}")
-            print(f"   OpenAI: {data.get('openai')}")
+            safe_print(f"   Status: {data.get('status')}")
+            safe_print(f"   Database: {data.get('database')}")
+            safe_print(f"   OpenAI: {data.get('openai')}")
     
     async def test_malformed_json(self):
         """Test sending malformed JSON."""
@@ -264,7 +290,7 @@ class ErrorScenarioTester:
         )
         
         if has_request_id:
-            print(f"   Request ID: {response.headers.get('x-request-id')}")
+            safe_print(f"   Request ID: {response.headers.get('x-request-id')}")
     
     async def test_error_response_format(self):
         """Test that error responses have consistent format."""
@@ -282,86 +308,86 @@ class ErrorScenarioTester:
             )
             
             if has_detail:
-                print(f"   Error detail: {data['detail']}")
+                safe_print(f"   Error detail: {data['detail']}")
     
     def print_summary(self):
         """Print test summary."""
         total = self.test_results["passed"] + self.test_results["failed"]
-        print("\n" + "=" * 60)
-        print("ERROR SCENARIO TEST SUMMARY")
-        print("=" * 60)
-        print(f"Total tests: {total}")
-        print(f"✅ Passed: {self.test_results['passed']}")
-        print(f"❌ Failed: {self.test_results['failed']}")
-        print(f"Success rate: {(self.test_results['passed'] / total * 100):.1f}%")
+        safe_print("\n" + "=" * 60)
+        safe_print("ERROR SCENARIO TEST SUMMARY")
+        safe_print("=" * 60)
+        safe_print(f"Total tests: {total}")
+        safe_print(f"✅ Passed: {self.test_results['passed']}")
+        safe_print(f"❌ Failed: {self.test_results['failed']}")
+        safe_print(f"Success rate: {(self.test_results['passed'] / total * 100):.1f}%")
         
         if self.test_results["errors"]:
-            print("\nFailed tests:")
+            safe_print("\nFailed tests:")
             for error in self.test_results["errors"]:
-                print(f"  - {error['test']}: {error['details']}")
+                safe_print(f"  - {error['test']}: {error['details']}")
         
-        print("=" * 60)
+        safe_print("=" * 60)
         
         return self.test_results["failed"] == 0
 
 
 async def main():
     """Run all error scenario tests."""
-    print("=" * 60)
-    print("CHATBOT API ERROR SCENARIO TESTS")
-    print("=" * 60)
-    print("Testing error handling and validation...")
-    print()
+    safe_print("=" * 60)
+    safe_print("CHATBOT API ERROR SCENARIO TESTS")
+    safe_print("=" * 60)
+    safe_print("Testing error handling and validation...")
+    safe_print("")
     
     # Check if API is running
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get("http://localhost:8000/health/live", timeout=5.0)
             if response.status_code != 200:
-                print("❌ ERROR: API is not responding properly")
-                print("Please ensure the API is running: uvicorn src.postgresdb_8.main:app --host 0.0.0.0 --port 8000")
+                safe_print("❌ ERROR: API is not responding properly")
+                safe_print("Please ensure the API is running: uvicorn src.postgresdb_8.main:app --host 0.0.0.0 --port 8000")
                 return False
     except Exception as e:
-        print(f"❌ ERROR: Cannot connect to API at http://localhost:8000")
-        print(f"Error: {e}")
-        print("\nPlease ensure the API is running: uvicorn src.postgresdb_8.main:app --host 0.0.0.0 --port 8000")
+        safe_print(f"❌ ERROR: Cannot connect to API at http://localhost:8000")
+        safe_print(f"Error: {e}")
+        safe_print("\nPlease ensure the API is running: uvicorn src.postgresdb_8.main:app --host 0.0.0.0 --port 8000")
         return False
     
-    print("✅ API is running\n")
+    safe_print("✅ API is running\n")
     
     # Run tests
     tester = ErrorScenarioTester()
     
     try:
-        print("1. Validation Error Tests")
-        print("-" * 60)
+        safe_print("1. Validation Error Tests")
+        safe_print("-" * 60)
         await tester.test_invalid_empty_message()
         await tester.test_invalid_missing_message_field()
         await tester.test_invalid_stream_parameter()
         await tester.test_malformed_json()
         
-        print("\n2. Not Found Error Tests")
-        print("-" * 60)
+        safe_print("\n2. Not Found Error Tests")
+        safe_print("-" * 60)
         await tester.test_nonexistent_thread()
         await tester.test_delete_nonexistent_thread()
         await tester.test_invalid_thread_id_format()
         
-        print("\n3. Pagination Error Tests")
-        print("-" * 60)
+        safe_print("\n3. Pagination Error Tests")
+        safe_print("-" * 60)
         await tester.test_invalid_pagination_params()
         
-        print("\n4. HTTP Method Tests")
-        print("-" * 60)
+        safe_print("\n4. HTTP Method Tests")
+        safe_print("-" * 60)
         await tester.test_unsupported_http_method()
         
-        print("\n5. Health & Infrastructure Tests")
-        print("-" * 60)
+        safe_print("\n5. Health & Infrastructure Tests")
+        safe_print("-" * 60)
         await tester.test_health_check_success()
         await tester.test_cors_headers()
         await tester.test_request_id_tracking()
         
-        print("\n6. Error Format Tests")
-        print("-" * 60)
+        safe_print("\n6. Error Format Tests")
+        safe_print("-" * 60)
         await tester.test_error_response_format()
         
         # Print summary

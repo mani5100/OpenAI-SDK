@@ -94,18 +94,29 @@ async def startup_event():
             }
         },
     )
-    print(f"🚀 Starting {settings.APP_NAME} v{settings.APP_VERSION}...")
-    print(f"📚 API Documentation available at: /docs")
-    print(f"📖 ReDoc Documentation available at: /redoc")
-    print(f"🔧 Environment: {'Development' if settings.API_RELOAD else 'Production'}")
-    print(f"🤖 OpenAI Model: {settings.OPENAI_CHAT_MODEL}")
+    try:
+        print(f"🚀 Starting {settings.APP_NAME} v{settings.APP_VERSION}...")
+        print(f"📚 API Documentation available at: /docs")
+        print(f"📖 ReDoc Documentation available at: /redoc")
+        print(f"🔧 Environment: {'Development' if settings.API_RELOAD else 'Production'}")
+        print(f"🤖 OpenAI Model: {settings.OPENAI_CHAT_MODEL}")
+    except UnicodeEncodeError:
+        # Fallback for Windows console that doesn't support emojis
+        print(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}...")
+        print(f"API Documentation available at: /docs")
+        print(f"ReDoc Documentation available at: /redoc")
+        print(f"Environment: {'Development' if settings.API_RELOAD else 'Production'}")
+        print(f"OpenAI Model: {settings.OPENAI_CHAT_MODEL}")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Execute on application shutdown"""
     logger.info(f"Shutting down {settings.APP_NAME}")
-    print(f"👋 Shutting down {settings.APP_NAME}...")
+    try:
+        print(f"👋 Shutting down {settings.APP_NAME}...")
+    except UnicodeEncodeError:
+        print(f"Shutting down {settings.APP_NAME}...")
 
 
 if __name__ == "__main__":
