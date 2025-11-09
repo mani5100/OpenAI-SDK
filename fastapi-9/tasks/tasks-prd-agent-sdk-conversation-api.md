@@ -36,12 +36,12 @@
   - [x] 1.4 Install dependencies using `uv sync`.
   - [x] 1.5 Set up pytest and create `tests/` directory structure with `conftest.py`.
 
-- [ ] 2.0 FastAPI app scaffolding and configuration
-  - [ ] 2.1 Create `src/fastapi_9/main.py` with FastAPI app instance, root route, and health check endpoint.
-  - [ ] 2.2 Configure FastAPI with title, version, description, and OpenAPI info for Swagger/Redoc.
-  - [ ] 2.3 Set up request/response logging middleware (log size, correlation ID, timing, but not content).
-  - [ ] 2.4 Create `src/fastapi_9/logging.py` with structured logging setup, correlation ID generator, and custom formatters.
-  - [ ] 2.5 Add shutdown and startup event handlers in main.py for graceful session cleanup.
+- [x] 2.0 FastAPI app scaffolding and configuration
+  - [x] 2.1 Create `src/fastapi_9/main.py` with FastAPI app instance, root route, and health check endpoint.
+  - [x] 2.2 Configure FastAPI with title, version, description, and OpenAPI info for Swagger/Redoc.
+  - [x] 2.3 Set up request/response logging middleware (log size, correlation ID, timing, but not content).
+  - [x] 2.4 Create `src/fastapi_9/logging.py` with structured logging setup, correlation ID generator, and custom formatters.
+  - [x] 2.5 Add shutdown and startup event handlers in main.py for graceful session cleanup.
 
 - [ ] 3.0 Chat API endpoint `POST /api/agent/chat`
   - [ ] 3.1 Create `src/fastapi_9/models.py` with Pydantic models: ChatRequest (message, session_id?, model?, system_prompt?, temperature?), ChatResponse (reply, model, usage?, latency_ms, session_id?, truncated_history).

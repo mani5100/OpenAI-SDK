@@ -3,11 +3,19 @@
 import logging
 from typing import Optional
 
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 
 
 class Config(BaseSettings):
     """Application configuration loaded from environment variables."""
+
+    model_config = ConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",  # Ignore extra environment variables
+    )
 
     # OpenAI API Configuration
     openai_api_key: str
@@ -27,13 +35,6 @@ class Config(BaseSettings):
     app_title: str = "Conversation AI Agent API"
     app_version: str = "0.1.0"
     app_description: str = "REST API for conversational AI powered by OpenAI Agents SDK"
-
-    class Config:
-        """Pydantic config for settings."""
-
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
 
     def get_logger(self, name: str) -> logging.Logger:
         """Create a configured logger instance."""
